@@ -8,27 +8,26 @@ import json, os, csv
 
 
 class Main:
-    
+
     FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self):
         self._dicionario        = self._ler_dicionario(self.FILE_PATH)
         self._maiores_notas     = dict()
         self._menores_notas     = dict()
-        self._melhores_refacoes = dict()
-        self._faixa_etaria      = dict()
-        self._sexo              = dict()
-        self._estado_civil      = dict()
-        self._cor_raca          = dict()
-        self._conclusao_escola  = dict()
-        self._ano_conclusao     = dict()
-        self._tipo_escola       = dict()
+        self._melhores_redacoes = dict()
         self._cien_naturais     = dict()
         self._cien_humanas      = dict()
         self._linguagens        = dict()
         self._matematica        = dict()
-        self._status_redacao    = dict()
-        self._renda             = dict()
+        self._faixa_etaria      = {chave: 0 for chave in self._dicionario["TP_FAIXA_ETARIA"]}
+        self._sexo              = {chave: 0 for chave in self._dicionario["TP_SEXO"]}
+        self._estado_civil      = {chave: 0 for chave in self._dicionario["TP_ESTADO_CIVIL"]}
+        self._cor_raca          = {chave: 0 for chave in self._dicionario["TP_COR_RACA"]}
+        self._conclusao_escola  = {chave: 0 for chave in self._dicionario["TP_ST_CONCLUSAO"]}
+        self._ano_conclusao     = {chave: 0 for chave in self._dicionario["TP_ANO_CONCLUIU"]}
+        self._tipo_escola       = {chave: 0 for chave in self._dicionario["TP_ESCOLA"]}
+        self._status_redacao    = {chave: 0 for chave in self._dicionario["TP_STATUS_REDACAO"]}
 
 
     @staticmethod
@@ -40,13 +39,22 @@ class Main:
 
     def _execute(self) -> None:
         try:
-            FILE_PATH = os.path.join('dados_enem_23.csv')
+            FILE_PATH = os.path.join(self.FILE_PATH, 'dados_enem_23.csv')
             with open(FILE_PATH, mode="r", encoding="utf-8") as file:
                 reader = csv.reader(file)
-                for linha in reader: print(linha, type(linha))
-        except MemoryError:       print('Memória insuficente para carregar os dados')
+                for linha in reader:
+                    dados = linha[0].split(';')
+                    self._processar_dados(dados)
         except FileNotFoundError: print('Arquivo de dados não enontrado')
+        except MemoryError:       print('Memória insuficente para carregar os dados')
 
+
+    def _processar_dados(self, dados:list) -> None:
+        self._atualize_faixa_etaria(dados[0])
+
+
+    def _atualize_faixa_etaria(self, idade:str) -> None:
+        self._faixa_etaria[idade] += 1
 
 
 if __name__ == '__main__':
