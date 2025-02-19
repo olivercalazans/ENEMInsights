@@ -4,12 +4,15 @@
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software...
 
 
-import os, csv
+import json, os, csv
 
 
 class Main:
+    
+    FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self):
+        self._dicionario        = self._ler_dicionario(self.FILE_PATH)
         self._maiores_notas     = dict()
         self._menores_notas     = dict()
         self._melhores_refacoes = dict()
@@ -27,17 +30,25 @@ class Main:
         self._status_redacao    = dict()
         self._renda             = dict()
 
-    
+
+    @staticmethod
+    def _ler_dicionario(FILE_PATH) -> dict:
+        FILE_PATH = os.path.join(FILE_PATH, 'dicionario.json')
+        with open(FILE_PATH, "r", encoding="utf-8") as file:
+            return json.load(file)
+
+
     def _execute(self) -> None:
         try:
-            self._ler_dados()
+            FILE_PATH = os.path.join('dados_enem_23.csv')
+            with open(FILE_PATH, mode="r", encoding="utf-8") as file:
+                reader = csv.reader(file)
+                for linha in reader: print(linha, type(linha))
         except MemoryError:       print('Memória insuficente para carregar os dados')
         except FileNotFoundError: print('Arquivo de dados não enontrado')
 
-    
-    def _ler_dados(self) -> None:
-        FILE_PATH     = os.path.dirname(os.path.abspath(__file__))
-        FILE_PATH     = os.path.join('dados_enem_23.csv')
-        with open(FILE_PATH, mode="r", encoding="utf-8") as file:
-            reader = csv.reader(file)
-            for linha in reader: print(linha, type(linha))
+
+
+if __name__ == '__main__':
+    x = Main()
+    x._execute()
