@@ -4,8 +4,7 @@
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software...
 
 
-import os
-import pandas
+import os, csv
 
 
 class Main:
@@ -39,6 +38,6 @@ class Main:
     def _ler_dados(self) -> None:
         FILE_PATH     = os.path.dirname(os.path.abspath(__file__))
         FILE_PATH     = os.path.join('dados_enem_23.csv')
-        data_frame    = pandas.read_csv(FILE_PATH, encoding='utf-8')
-        dados_dict    = data_frame.to_dict(orient='records')
-        self._pessoas = dados_dict
+        with open(FILE_PATH, mode="r", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            for linha in reader: print(linha, type(linha))
