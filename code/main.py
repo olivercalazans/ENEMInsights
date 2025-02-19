@@ -16,18 +16,16 @@ class Main:
         self._maiores_notas     = dict()
         self._menores_notas     = dict()
         self._melhores_redacoes = dict()
-        self._cien_naturais     = dict()
-        self._cien_humanas      = dict()
-        self._linguagens        = dict()
-        self._matematica        = dict()
-        self._faixa_etaria      = {chave: 0 for chave in self._dicionario["TP_FAIXA_ETARIA"]}
-        self._sexo              = {chave: 0 for chave in self._dicionario["TP_SEXO"]}
-        self._estado_civil      = {chave: 0 for chave in self._dicionario["TP_ESTADO_CIVIL"]}
-        self._cor_raca          = {chave: 0 for chave in self._dicionario["TP_COR_RACA"]}
-        self._conclusao_escola  = {chave: 0 for chave in self._dicionario["TP_ST_CONCLUSAO"]}
-        self._ano_conclusao     = {chave: 0 for chave in self._dicionario["TP_ANO_CONCLUIU"]}
-        self._tipo_escola       = {chave: 0 for chave in self._dicionario["TP_ESCOLA"]}
-        self._status_redacao    = {chave: 0 for chave in self._dicionario["TP_STATUS_REDACAO"]}
+        self._dados_gerais      = {
+            'faixa_etaria':     {chave: 0 for chave in self._dicionario["TP_FAIXA_ETARIA"]},
+            'sexo':             {chave: 0 for chave in self._dicionario["TP_SEXO"]},
+            'estado_civil':     {chave: 0 for chave in self._dicionario["TP_ESTADO_CIVIL"]},
+            'cor_raca':         {chave: 0 for chave in self._dicionario["TP_COR_RACA"]},
+            'conclusao_escola': {chave: 0 for chave in self._dicionario["TP_ST_CONCLUSAO"]},
+            'ano_conclusao':    {chave: 0 for chave in self._dicionario["TP_ANO_CONCLUIU"]},
+            'tipo_escola':      {chave: 0 for chave in self._dicionario["TP_ESCOLA"]},
+            'status_redacao':   {chave: 0 for chave in self._dicionario["TP_STATUS_REDACAO"]}
+        }
 
 
     @staticmethod
@@ -51,15 +49,13 @@ class Main:
 
 
     def _processar_dados(self, dados:list) -> None:
-        self._atualize_faixa_etaria(dados[0])
-        self._atualize_sexo(dados[1])
+        dados_gerais = [dados[0], dados[1], dados[2], dados[3], dados[4], dados[5], dados[6], dados[11]]
+        self._atualize_dados_gerais()
 
 
-    def _atualize_faixa_etaria(self, idade:str) -> None:
-        self._faixa_etaria[idade] += 1
-
-    def _atualize_sexo(self, sexo:str) -> None:
-        self._sexo[sexo] =+ 1
+    def _atualize_dados_gerais(self, dados_gerais:list) -> None:
+        for tipo, valor in zip(self._dados_gerais, dados_gerais):
+            self._dados_gerais[tipo][valor] += 1
 
 
 if __name__ == '__main__':
