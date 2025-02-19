@@ -44,17 +44,22 @@ class Main:
                 reader = csv.reader(file)
                 for linha in reader:
                     dados = linha[0].split(';')
-                    self._processar_dados(dados)
+                    print(dados)
+                    #self._processar_dados(dados)
         except FileNotFoundError: print('Arquivo de dados não enontrado')
         except MemoryError:       print('Memória insuficente para carregar os dados')
 
 
     def _processar_dados(self, dados:list) -> None:
         self._atualize_faixa_etaria(dados[0])
+        self._atualize_sexo(dados[1])
 
 
     def _atualize_faixa_etaria(self, idade:str) -> None:
         self._faixa_etaria[idade] += 1
+
+    def _atualize_sexo(self, sexo:str) -> None:
+        self._sexo[sexo] =+ 1
 
 
 if __name__ == '__main__':
