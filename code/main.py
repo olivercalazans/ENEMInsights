@@ -13,20 +13,12 @@ class Main:
 
     def __init__(self):
         self._dicionario         = self._ler_dicionario(self.FILE_PATH)
+        self._dados_gerais       = self._criar_dicionario()
+        self._dados_melhores     = self._dados_gerais
         self._contador           = 0
         self._dados_participante = list()
         self._maiores_notas      = list()
         self._menores_notas      = list()
-        self._dados_gerais       = {
-            'faixa_etaria':     self._criar_dicionario("TP_FAIXA_ETARIA"),
-            'sexo':             self._criar_dicionario("TP_SEXO"),
-            'estado_civil':     self._criar_dicionario("TP_ESTADO_CIVIL"),
-            'cor_raca':         self._criar_dicionario("TP_COR_RACA"),
-            'conclusao_escola': self._criar_dicionario("TP_ST_CONCLUSAO"),
-            'ano_conclusao':    self._criar_dicionario("TP_ANO_CONCLUIU"),
-            'tipo_escola':      self._criar_dicionario("TP_ESCOLA"),
-            'status_redacao':   self._criar_dicionario("TP_STATUS_REDACAO")
-        }
 
 
     @staticmethod
@@ -36,8 +28,10 @@ class Main:
             return json.load(file)
 
 
-    def _criar_dicionario(self, chave:str) -> dict:
-        return {chave: 0 for chave in self._dicionario[chave]}
+    def _criar_dicionario(self) -> dict:
+        chaves_dict   = ['faixa_etaria',    'sexo',    'estado_civil',    'cor_raca',    'conclusao_escola', 'ano_conclusao',   'tipo_escola', 'status_redacao']
+        chaves_tabela = ["TP_FAIXA_ETARIA", "TP_SEXO", "TP_ESTADO_CIVIL", "TP_COR_RACA", "TP_ST_CONCLUSAO",  "TP_ANO_CONCLUIU", "TP_ESCOLA",   "TP_STATUS_REDACAO"]
+        return {x: {chave: 0 for chave in self._dicionario[z]} for x, z in zip(chaves_dict, chaves_tabela)}
 
 
     def _execute(self) -> None:
@@ -78,7 +72,6 @@ class Main:
 
     def _classifique_a_nota(self, notas:list) -> None:
         nota_geral = round(sum(notas) / 5, 1)
-        self._dados_participante.append(nota_geral)
         if   nota_geral >= 800: self._maiores_notas.append(self._dados_participante)
         elif nota_geral <= 300: self._menores_notas.append(self._dados_participante)
 
