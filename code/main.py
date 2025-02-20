@@ -4,7 +4,7 @@
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software...
 
 
-import json, os, csv
+import json, os, csv, sys
 
 
 class Main:
@@ -40,22 +40,34 @@ class Main:
             FILE_PATH = os.path.join(self.FILE_PATH, 'dados_enem_23.csv')
             with open(FILE_PATH, mode="r", encoding="utf-8") as file:
                 reader = csv.reader(file)
+                contador = 0
+                next(reader)
                 for linha in reader:
                     dados = linha[0].split(';')
-                    print(dados)
-                    #self._processar_dados(dados)
+                    self._processar_dados(dados)
+                    contador += 1
+                    sys.stdout.write(f'\rLinhas processadas: {contador}')
+                    sys.stdout.flush()
+            print('\n')
+            self._mostrar_dados()
         except FileNotFoundError: print('Arquivo de dados não enontrado')
         except MemoryError:       print('Memória insuficente para carregar os dados')
 
 
     def _processar_dados(self, dados:list) -> None:
         dados_gerais = [dados[0], dados[1], dados[2], dados[3], dados[4], dados[5], dados[6], dados[11]]
-        self._atualize_dados_gerais()
+        self._atualize_dados_gerais(dados_gerais)
 
 
     def _atualize_dados_gerais(self, dados_gerais:list) -> None:
         for tipo, valor in zip(self._dados_gerais, dados_gerais):
             self._dados_gerais[tipo][valor] += 1
+
+
+    def _mostrar_dados(self) -> None:
+        for dados in self._dados_gerais:
+            for i in self._dados_gerais[dados]:
+                print(f'{i} >> {self._dados_gerais[dados][i]}')
 
 
 if __name__ == '__main__':
