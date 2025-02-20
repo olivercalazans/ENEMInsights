@@ -18,14 +18,14 @@ class Main:
         self._maiores_notas      = list()
         self._menores_notas      = list()
         self._dados_gerais       = {
-            'faixa_etaria':     {chave: 0 for chave in self._dicionario["TP_FAIXA_ETARIA"]},
-            'sexo':             {chave: 0 for chave in self._dicionario["TP_SEXO"]},
-            'estado_civil':     {chave: 0 for chave in self._dicionario["TP_ESTADO_CIVIL"]},
-            'cor_raca':         {chave: 0 for chave in self._dicionario["TP_COR_RACA"]},
-            'conclusao_escola': {chave: 0 for chave in self._dicionario["TP_ST_CONCLUSAO"]},
-            'ano_conclusao':    {chave: 0 for chave in self._dicionario["TP_ANO_CONCLUIU"]},
-            'tipo_escola':      {chave: 0 for chave in self._dicionario["TP_ESCOLA"]},
-            'status_redacao':   {chave: 0 for chave in self._dicionario["TP_STATUS_REDACAO"]}
+            'faixa_etaria':     self._criar_dicionario("TP_FAIXA_ETARIA"),
+            'sexo':             self._criar_dicionario("TP_SEXO"),
+            'estado_civil':     self._criar_dicionario("TP_ESTADO_CIVIL"),
+            'cor_raca':         self._criar_dicionario("TP_COR_RACA"),
+            'conclusao_escola': self._criar_dicionario("TP_ST_CONCLUSAO"),
+            'ano_conclusao':    self._criar_dicionario("TP_ANO_CONCLUIU"),
+            'tipo_escola':      self._criar_dicionario("TP_ESCOLA"),
+            'status_redacao':   self._criar_dicionario("TP_STATUS_REDACAO")
         }
 
 
@@ -34,6 +34,10 @@ class Main:
         FILE_PATH = os.path.join(FILE_PATH, 'dicionario.json')
         with open(FILE_PATH, "r", encoding="utf-8") as file:
             return json.load(file)
+
+
+    def _criar_dicionario(self, chave:str) -> dict:
+        return {chave: 0 for chave in self._dicionario[chave]}
 
 
     def _execute(self) -> None:
