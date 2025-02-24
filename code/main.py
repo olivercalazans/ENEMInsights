@@ -1,25 +1,35 @@
 # MIT License
-# Copyright (c) 2024 Oliver Ribeiro Calazans Jeronimo
+# Copyright (c) 2024 Oliver Calazans, Joan Mateus, Gleyka Rocha
 # Repository: https://github.com/olivercalazans/ENEMInsights
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software...
 
-
 import json, os, csv, sys
+
+# 0 TP_FAIXA_ETARIA         # 10 NU_NOTA_MT
+# 1 TP_SEXO                 # 11 NU_NOTA_REDACAO
+# 2 TP_ESTADO_CIVIL         # 12 Q001
+# 3 TP_COR_RACA             # 13 Q002
+# 4 TP_ST_CONCLUSAO         # 14 Q006
+# 5 TP_ANO_CONCLUIU         # 15 Q019
+# 6 TP_ESCOLA               # 16 Q022
+# 7 NU_NOTA_CN              # 17 Q024
+# 8 NU_NOTA_CH              # 18 Q025
+# 9 NU_NOTA_LC
 
 class Main:
 
     FILE_PATH:str       = os.path.dirname(os.path.abspath(__file__))
-    CHAVES_TABELA_GERAL = ["TP_FAIXA_ETARIA", "TP_SEXO", "TP_ESTADO_CIVIL", "TP_COR_RACA", "TP_ST_CONCLUSAO", "TP_ANO_CONCLUIU", "TP_ESCOLA", "TP_STATUS_REDACAO"]
+    CHAVES_TABELA_GERAL = ["TP_FAIXA_ETARIA", "TP_SEXO", "TP_ESTADO_CIVIL", "TP_COR_RACA", "TP_ST_CONCLUSAO", "TP_ANO_CONCLUIU", "TP_ESCOLA"]
 
     def __init__(self):
-        self._dicionario:dict         = self._ler_dicionario(self.FILE_PATH)
-        self._dados_gerais:dict       = self._criar_dicionario(self.CHAVES_TABELA_GERAL)
-        self._dados_melhores:dict     = self._criar_dicionario()
-        self._dados_piores:dict       = self._criar_dicionario()
-        self._dados_participante:list = list()
-        self._contador:int            = 0
-        self._maiores_notas:int       = 0
-        self._menores_notas:int       = 0
+        self._dicionario:dict     = self._ler_dicionario(self.FILE_PATH)
+        self._dados_gerais:dict   = self._criar_dicionario(self.CHAVES_TABELA_GERAL)
+        self._dados_melhores:dict = self._criar_dicionario()
+        self._dados_piores:dict   = self._criar_dicionario()
+        self._dados_participante  = list()
+        self._contador:int        = 0
+        self._maiores_notas:int   = 0
+        self._menores_notas:int   = 0
 
 
     @staticmethod
@@ -30,7 +40,7 @@ class Main:
 
 
     def _criar_dicionario(self, CHAVES=None) -> dict:
-        if not CHAVES: CHAVES = [chave for chave in self._dicionario if chave != 'TP_STATUS_REDACAO']
+        if not CHAVES: CHAVES = [chave for chave in self._dicionario if chave]
         return {x: {chave: 0 for chave in self._dicionario[x]} for x in CHAVES}
 
 
@@ -49,11 +59,11 @@ class Main:
             self._mostrar_dados()
         except FileNotFoundError: print('Arquivo de dados não encontrado')
         except MemoryError:       print('Memória insuficente para carregar os dados')
-        except Exception as erro: print(f'Erro desconhecido:\n{erro}')
+        except Exception as erro: print(f'\nErro desconhecido:\n{erro}')
 
 
     def _processar_dados(self) -> None:
-        self._atualize_valores(self._dados_gerais, [0, 1, 2, 3, 4, 5, 6, 11])
+        self._atualize_valores(self._dados_gerais, [0, 1, 2, 3, 4, 5, 6])
         self._processe_se_houver_todas_as_notas()
         self._contador += 1
 
@@ -65,19 +75,20 @@ class Main:
 
 
     def _processe_se_houver_todas_as_notas(self) -> None:
-        try:    notas = [float(self._dados_participante[i]) for i in [7, 8, 9, 10, 17]]
+        try:    notas = [float(self._dados_participante[i]) for i in [7, 8, 9, 10, 11]]
         except: pass
         else:   self._classifique_a_nota(notas)
 
 
     def _classifique_a_nota(self, notas:list) -> None:
+        INDICES    = [0, 1, 2, 3, 4, 5, 6, -7, -6, -5, -4, -3, -2, -1]
         nota_geral = round(sum(notas)/5, 1)
         if nota_geral >= 800:
             self._maiores_notas += 1
-            self._atualize_valores(self._dados_melhores, [0, 1, 2, 3, 4, 5, 6, -7, -6, -5, -4, -3, -2, -1])
+            self._atualize_valores(self._dados_melhores, INDICES)
         elif nota_geral <= 400:
             self._menores_notas += 1
-            self._atualize_valores(self._dados_piores, [0, 1, 2, 3, 4, 5, 6, -7, -6, -5, -4, -3, -2, -1])
+            self._atualize_valores(self._dados_piores, INDICES)
 
 
     def _mostrar_dados(self) -> None:
@@ -86,6 +97,9 @@ class Main:
                 print(f'{i} >> {self._dados_gerais[dados][i]}')
 
         print(self._maiores_notas)
+        for i in self._dados_melhores:
+            for z in i:
+                print(f'{i} >> {i[z]}')
         print(self._menores_notas)
 
 
